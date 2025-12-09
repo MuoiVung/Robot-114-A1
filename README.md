@@ -1,124 +1,135 @@
------
-
 # Epson C3-A600S Pick & Place System
 
-This repository contains the source code, logic workflows, and wiring diagrams for an automated Pick & Place and Stacking system using the **Epson C3-A600S (6-Axis)** robot and **RC180 Controller**.
+<p align="center">
+  <img src="images/Simulation_View.png" width="100%" alt="Epson Robot Simulation View">
+</p>
 
-The project features a robust **Smart Calibration Algorithm** that allows for rapid fixture and tray re-teaching using only 2 points, significantly reducing setup time while maintaining high accuracy.
+## 📖 Introduction
+
+This project implements an automated control system for the **Epson C3-A600S (6-Axis)** robot paired with an **RC180 Controller**. The system performs high-speed Pick & Place and Stacking operations between a Feeder, Fixture, and Pallet Tray.
+
+A key highlight of this project is the **Smart Vector-Based Calibration**, which allows operators to re-teach the Tray and Fixture positions using only **2 points** (Origin + Y-Axis) instead of the traditional 3-point method, significantly reducing setup time while ensuring high precision.
 
 ## 📂 Repository Structure
 
-  * **`Robot_workflow.png`**: Flowchart illustrating the logical operation of the system.
-  * **`Wiring_Diagram.png`**: Hardware connection diagram between the I/O Box and RC180 Controller.
-  * **`Robot_Production.zip`**: The complete EPSON RC+ 7.0 project source code for the **Physical Robot**.
-  * **`Robot_Simulation.zip`**: The modified EPSON RC+ 7.0 project source code for the **Simulator** (Vacuum checks disabled).
+* **`images/`**: Contains diagrams, flowcharts, and simulation screenshots.
+* **`Robot_Production.zip`**: Source code for the physical robot (Compatible with **EPSON RC+ 5.0**).
+* **`Robot_Simulation.zip`**: Source code for the simulator (Compatible with **EPSON RC+ 7.0**).
+* **`README.md`**: Project documentation.
 
------
+---
 
 ## ⚙️ Hardware & Software Requirements
 
-  * **Robot:** Epson C3-A600S (6-Axis Vertical Articulated).
-  * **Controller:** Epson RC180.
-  * **IDE:** EPSON RC+ 7.0.
-  * **Peripherals:**
-      * Remote I/O Control Box (Start, Stop, Reset).
-      * Vacuum Gripper with suction sensors.
-      * Feeder, Fixture, and Pallet Tray.
+Due to the specific hardware generation (C3 robot + RC180 controller), this project operates across two software environments:
+
+### Software Environments
+1.  **Simulation Environment:** Uses **EPSON RC+ 7.0**.
+    * *Reason:* RC+ 7.0 offers superior 3D simulation capabilities for testing logic and motion paths.
+2.  **Production Environment:** Uses **EPSON RC+ 5.0**.
+    * *Reason:* The physical RC180 controller requires RC+ 5.0 for connection and program execution.
+
+### Hardware Setup
+* **Robot:** Epson C3-A600S (6-Axis Vertical Articulated).
+* **Controller:** Epson RC180.
+* **Peripherals:**
+    * Remote I/O Control Box (Start, Stop, Reset).
+    * Vacuum Gripper with pressure sensors.
+    * Workstations: Feeder, Alignment Fixture, Pallet Tray.
 
 ### 🔌 Wiring Diagram
+Connection diagram between the Remote I/O Box and the RC180 Controller terminals:
 
-The following diagram details the connection between the remote I/O button box and the RC180 controller terminals.
+<p align="center">
+  <img src="images/Wiring_Diagram.png" width="800" alt="Wiring Diagram I/O to RC180">
+</p>
 
-*(Image: Wiring diagram for I/O Box to RC180 Controller)*
-
------
+---
 
 ## 🚀 Key Features
 
-### 1\. Smart Auto-Calibration (Vector-Based)
+### 1. Smart Auto-Calibration (2-Point Method)
+Instead of the standard 3-point wizard, this system uses custom SPEL+ algorithms (`UpdateTrayLocal`, `UpdateFixtureLocal`) to recalculate Local Coordinates:
+* **2-Point Teaching:** Requires teaching only the **Origin** and one point on the **Y-Axis**.
+* **Auto-Flip Logic:** Automatically detects if the Y-axis was taught in the reverse direction and corrects the orientation by 180°.
+* **Math Core:** Utilizes `Atan2` for precise angle calculation while inheriting Z-height and Tilt (V, W) from a master reference Local.
 
-Instead of standard 3-point teaching, this system uses a custom SPEL+ algorithm (`UpdateTrayLocal`, `UpdateFixtureLocal`) to recalculate Local Coordinates using vector mathematics.
+### 2. Motion Optimization
+* **Continuous Path (CP):** Extensive use of `Go ... CP` and `Move ... CP` for smooth blending between motion segments.
+* **Parallel Processing:** Vacuum activation occurs *during* the vertical descent (`Move ... ! D30; On Vacuum !`) to minimize cycle time.
+* **Soft Compliance:** Utilization of `SoftCP` during placement on the Tray to compensate for minor mechanical misalignments.
 
-  * **2-Point Teaching:** Requires only the **Origin** and one point on the **Y-Axis**.
-  * **Auto-Correction:** Includes logic to automatically detect if the Y-axis was taught in reverse and flips the orientation by 180° automatically.
-  * **Math Logic:** Uses `Atan2` to calculate angles and preserves the Z-height/Tilt (V, W) from a master local definition.
+### 3. Operation Modes
+The system supports two distinct cycles, selectable via I/O:
+* **Pick & Place Cycle:** Feeder &rarr; Fixture &rarr; Tray.
+* **Stacking Cycle:** Vertical stacking of multiple items.
 
-### 2\. Motion Optimization
-
-  * **Continuous Path (CP):** Extensively uses `Go ... CP` and `Move ... CP` for smooth transitions without stopping at intermediate points.
-  * **Parallel Processing:** Vacuum is triggered *during* motion using syntax like `Move ... ! D30; On Vacuum !` to reduce cycle time.
-  * **Soft Compliance:** Uses `SoftCP` during the placing phase at the Tray to compensate for minor misalignments and prevent damage.
-
-### 3\. Dual Operation Modes
-
-The system supports two distinct cycles triggered by external I/O:
-
-  * **Pick & Place Cycle:** Feeder -\> Fixture -\> Tray (Palletizing).
-  * **Stacking Cycle:** Stacking multiple items vertically.
-
------
+---
 
 ## 🔄 Logic Workflow
 
-The system operates via a non-stop `Monitor` task that handles safety (Stop/Reset) and a main `Cycle` task for robot motion.
+The system runs a background `Monitor` task for safety and I/O handling, alongside the main `Cycle` task for robot motion.
 
-*(Image: Flowchart of the robot program logic)*
+<p align="center">
+  <img src="images/Robot_workflow.png" width="600" alt="Robot Program Logic Flowchart">
+</p>
 
------
+---
 
 ## 📝 Code Overview
 
-### 1\. Calibration (`Setup.prg`)
+### 1. Calibration Core (`Setup.prg`)
+Contains the mathematical logic for updating Locals 2 and 3.
+* **`UpdateTrayLocal`**: Recalculates the Tray position.
+* **`UpdateFixtureLocal`**: Recalculates the Fixture position with auto-correction for reverse teaching.
 
-Handles the mathematical recalculation of Locals 2 and 3.
+### 2. Operation Modules
+* **`Feeder.prg`**: Picks items with calculated Z-offsets. Uses `(itemIndex - 1) Mod 3` for matrix handling.
+* **`Fixture.prg`**: Intermediate station for item alignment.
+* **`Tray.prg`**: Palletizing logic. Defines separate Pallets for "Tokens" and "Blocks" to handle specific rotation requirements.
+* **`Stacking.prg`**: Advanced logic for vertical stacking.
 
-  * **`UpdateTrayLocal`**: Updates the Tray position.
-  * **`UpdateFixtureLocal`**: Updates the Fixture position with "Auto-Flip" logic to correct orientation errors.
+### 3. Task Management (`Main.prg`)
+* **`Monitor` Task**: Runs continuously (`NoPause`) to handle:
+    * **RESET (Input 7):** Aborts tasks, homes the robot, and resets parameters.
+    * **STOP (Input 4):** Safely stops the cycle after the current operation.
+    * **START:** Triggers the selected operational cycle.
 
-### 2\. Operation Modules
+---
 
-  * **`Feeder.prg`**: picks items with calculated Z-offsets. Uses `(itemIndex - 1) Mod 3` logic for layout handling.
-  * **`Fixture.prg`**: Handles intermediate alignment.
-  * **`Tray.prg`**: Uses `Pallet` definitions. Distinct pallets are defined for "Tokens" and "Blocks" to handle different rotation requirements (Pallet 1 vs Pallet 2).
-  * **`Stacking.prg`**: Specialized logic for vertical stacking operations.
+## 📥 Installation & Usage
 
-### 3\. Task Management (`Main.prg`)
+Please select the appropriate guide based on your environment.
 
-  * **`Monitor` Task**: Runs in the background (`NoPause`). It watches for:
-      * **RESET (Input 7):** Aborts cycle, homes robot, and re-initializes.
-      * **STOP (Input 4):** Quits the current cycle safely.
-      * **START:** Triggers the selected cycle.
+### A. Running the Simulation
+* **Target:** Testing logic and visualizing 3D motion.
+* **Software:** **EPSON RC+ 7.0**.
 
------
-
-## ⚠️ Simulation vs. Production Code
-
-There are two versions of the code provided in the releases:
-
-1.  **Robot\_Production:**
-
-      * Contains the line: `Wait Sw(SensorVacuum) = On`
-      * **Use this for the real robot.** It ensures the robot waits for physical vacuum confirmation before moving.
-
-2.  **Robot\_Simulation:**
-
-      * The line `Wait Sw(SensorVacuum) = On` is **commented out**.
-      * **Use this for EPSON RC+ Simulator.** Since the simulator has no physical sensors, enabling the wait command would cause the program to hang indefinitely.
-
------
-
-## 📥 Installation
-
-1.  Download the appropriate `.zip` file.
+1.  Download and extract **`Robot_Simulation.zip`**.
 2.  Open **EPSON RC+ 7.0**.
-3.  Go to **Project** -\> **Import**.
-4.  Select the extracted folder.
-5.  Build and Run.
+3.  Go to **Project** &rarr; **Import** and select the extracted folder.
+4.  Press **F5** to open the Run Window and click **Start**.
+    * *Note:* In this version, the command `Wait Sw(SensorVacuum)` is commented out to prevent the program from hanging due to the lack of physical sensors.
 
------
+### B. Running on Physical Robot (Production)
+* **Target:** Real-world operation with the C3-A600S.
+* **Software:** **EPSON RC+ 5.0**.
 
-## 🛡️ Safety Note
+1.  Download and extract **`Robot_Production.zip`**.
+2.  Open **EPSON RC+ 5.0**.
+3.  Create a new project or Import the source files.
+4.  **I/O Configuration:** Ensure `Globals.inc` matches your physical wiring.
+5.  **Tool Configuration:** Accurately define Tool 1 (or Tool 2) dimensions for the suction cup.
+6.  **Build & Download** to the RC180 Controller.
+7.  **Calibration:** Perform the 2-point calibration routine before running the auto cycle.
 
-  * Ensure the **Weight** parameter in `Init.prg` matches your actual payload (currently set to `1.5` kg).
-  * Always test the **Calibration** functions at slow speeds after re-teaching points.
-  * Verify I/O wiring matches the `Globals.inc` definitions before connecting power.
+---
+
+## 🛡️ Safety Notes
+
+* **Payload:** Ensure the `Weight` parameter in `Init.prg` matches the actual payload (currently set to `1.5` kg).
+* **Speed:** When running the Calibration or Cycle for the first time, reduce the Speed/Accel to < 10%.
+* **Emergency Stop:** Always verify the E-Stop functionality before operation.
+
+---
+*Author: [Your Name]*
