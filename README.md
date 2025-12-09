@@ -9,20 +9,30 @@
 | **Robotics Engineer** | **Tran Viet Nam** | M11451805 | Pick and Place Programming, Simulation, Motion Logic |
 ---
 
-<table align="center" border="0">
-  <tr>
-    <td align="center" width="50%">
-      <img src="images/Simulation_Front.png" width="100%" alt="Simulation Front View">
-      <br>
-      <em>(Front View)</em>
-    </td>
-    <td align="center" width="50%">
-      <img src="images/Simulation_Iso.png" width="100%" alt="Simulation Isometric View">
-      <br>
-      <em>(Isometric View)</em>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="images/simulation_demo.gif" width="100%" alt="Epson Robot Simulation Animation">
+</p>
+
+<p align="center">
+  <details>
+    <summary><strong>👁️ Click to view high-resolution static angles (Front & Isometric)</strong></summary>
+    <br>
+    <table align="center" border="0">
+      <tr>
+        <td align="center" width="50%">
+          <img src="images/Simulation_Front.png" width="100%" alt="Simulation Front View">
+          <br>
+          <em>(Front View)</em>
+        </td>
+        <td align="center" width="50%">
+          <img src="images/Simulation_Iso.png" width="100%" alt="Simulation Isometric View">
+          <br>
+          <em>(Isometric View)</em>
+        </td>
+      </tr>
+    </table>
+  </details>
+</p>
 
 ## 📖 Introduction
 
