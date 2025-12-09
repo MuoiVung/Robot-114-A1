@@ -10,7 +10,7 @@
 ---
 
 <p align="center">
-  <img src="images/simulation_demo.gif" width="100%" alt="Epson Robot Simulation Animation">
+  <img src="images/Simulation_Demo.gif" width="100%" alt="Epson Robot Simulation Animation">
 </p>
 
 <p align="center">
