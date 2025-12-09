@@ -10,7 +10,8 @@
 ---
 
 <p align="center">
-  <img src="images/Simulation_View.png" width="100%" alt="Epson Robot Simulation View">
+  <img src="images/Simulation_Front.png" width="45%" alt="Simulation Front View">
+  &nbsp; &nbsp; <img src="images/Simulation_Iso.png" width="45%" alt="Simulation Isometric View">
 </p>
 
 ## 📖 Introduction
