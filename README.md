@@ -39,7 +39,7 @@ Due to the specific hardware generation, this project operates across two enviro
 ### Hardware Setup
 * **Robot:** Epson C3-A600S (6-Axis Vertical Articulated).
 * **Controller:** Epson RC180.
-* **Peripherals:** Remote I/O Control Box, Vacuum Gripper, Feeder, Fixture, Pallet Tray.
+* **Peripherals:** Remote I/O Control Box, Vacuum Suction, Feeder, Fixture, Pallet Tray.
 
 ### 🔌 Wiring Diagram
 Connection diagram between the Remote I/O Box and the RC180 Controller terminals.
