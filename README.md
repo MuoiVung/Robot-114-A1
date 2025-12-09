@@ -4,9 +4,9 @@
 
 | Role | Name | Student ID | Responsibilities |
 | :--- | :--- | :--- | :--- |
-| **Mechanical Engineer (ME)** | **[Name A]** | [Student ID] | Feeder/Fixture Design, Tolerance Analysis, 3D Modeling |
-| **Electrical Engineer (EE)** | **[Name B]** | [Student ID] | I/O Wiring, Electrical Cabinet, Sensor Integration |
-| **Robotics Engineer** | **[Name C]** | [Student ID] | SPEL+ Programming, Simulation, Motion Logic |
+| **Mechanical Engineer (ME)** | **To Nguyen Tan Phuong** | M11451804 | Fixture Design, Tolerance Analysis, 3D Modeling |
+| **Electrical Engineer (EE)** | **Nguyen Thao Huong** | M11451806 | I/O Wiring, Electrical Cabinet, Sensor Integration, Stacking Cycle Programming |
+| **Robotics Engineer** | **Tran Viet Nam** | M11451805 | Pick and Place Programming, Simulation, Motion Logic |
 ---
 
 <p align="center">
@@ -128,4 +128,4 @@ The system runs a background `Monitor` task for safety and I/O handling, alongsi
 * **E-Stop:** Always keep the Emergency Stop button within reach.
 
 ---
-*This project was developed as part of the [Course Name/Semester] at [University Name].*
+*This project was developed as part of the Autonomous Mobile Vehicles and Robots Introduction (Fall 2025) at National Taiwan University of Science and Technology.*
