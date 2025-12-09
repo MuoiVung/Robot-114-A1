@@ -9,10 +9,20 @@
 | **Robotics Engineer** | **Tran Viet Nam** | M11451805 | Pick and Place Programming, Simulation, Motion Logic |
 ---
 
-<p align="center">
-  <img src="images/Simulation_Front.png" width="45%" alt="Simulation Front View">
-  &nbsp; &nbsp; <img src="images/Simulation_Iso.png" width="45%" alt="Simulation Isometric View">
-</p>
+<table align="center" border="0">
+  <tr>
+    <td align="center" width="50%">
+      <img src="images/Simulation_Front.png" width="100%" alt="Simulation Front View">
+      <br>
+      <em>(Front View)</em>
+    </td>
+    <td align="center" width="50%">
+      <img src="images/Simulation_Iso.png" width="100%" alt="Simulation Isometric View">
+      <br>
+      <em>(Isometric View)</em>
+    </td>
+  </tr>
+</table>
 
 ## 📖 Introduction
 
