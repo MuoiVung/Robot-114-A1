@@ -1,4 +1,4 @@
-# Autonomous Manufacturing Cell: Epson C3 Robot & JetBot AMR
+# Epson C3 Robot & JetBot AMR
 
 ### 👨‍🎓 Project Team & Roles
 
