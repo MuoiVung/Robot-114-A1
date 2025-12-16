@@ -1,74 +1,84 @@
-# Epson C3 Robot & JetBot AMR
+# Epson C3-A600S Pick & Place System & JetBot AMR
 
 ### 👨‍🎓 Project Team & Roles
 
 | Role | Name | Student ID | Responsibilities |
 | :--- | :--- | :--- | :--- |
-| **Mechanical Engineer (ME)** | **To Nguyen Tan Phuong** | M11451804 | Fixture Design (STL/CAD), Tolerance Analysis, JetBot AGV Programming & Navigation Logic |
+| **Mechanical Engineer (ME)** | **To Nguyen Tan Phuong** | M11451804 | Fixture Design, Tolerance Analysis, 3D Modeling, Jetbot Programming |
 | **Electrical Engineer (EE)** | **Nguyen Thao Huong** | M11451806 | I/O Wiring, Electrical Cabinet, Sensor Integration, Stacking Cycle Programming |
 | **Robotics Engineer** | **Tran Viet Nam** | M11451805 | Pick and Place Programming, Simulation, Motion Logic |
-
 ---
 
 <p align="center">
-  <img src="images/Simulation_Demo.gif" width="100%" alt="System Simulation Animation">
+  <img src="images/Simulation_Demo.gif" width="100%" alt="Epson Robot Simulation Animation">
+</p>
+
+<p align="center">
+  <details>
+    <summary><strong>👁️ Click to view high-resolution static angles (Front & Isometric)</strong></summary>
+    <br>
+    <table align="center" border="0">
+      <tr>
+        <td align="center" width="50%">
+          <img src="images/Simulation_Front.png" width="100%" alt="Simulation Front View">
+          <br>
+          <em>(Front View)</em>
+        </td>
+        <td align="center" width="50%">
+          <img src="images/Simulation_Iso.png" width="100%" alt="Simulation Isometric View">
+          <br>
+          <em>(Isometric View)</em>
+        </td>
+      </tr>
+    </table>
+  </details>
 </p>
 
 ## 📖 Introduction
 
-This repository contains the source code and design resources for a complete **Automated Manufacturing Cell**. The project is divided into two distinct subsystems that work together:
+This project is part of the **Autonomous Mobile Vehicles and Robots Introduction** course. It consists of two main modules working in a simulated manufacturing environment:
 
-1.  **Mobile Logistics (JetBot AMR):** An Autonomous Mobile Robot responsible for transporting raw materials using vision-based navigation (Line Following & Obstacle Avoidance).
-2.  **Assembly Station (Epson Robot):** A 6-Axis Industrial Robotic Arm (Epson C3-A600S) responsible for high-precision Pick & Place and Stacking operations.
+1.  **Epson Robot Station:** An automated control system for the **Epson C3-A600S (6-Axis)** robot paired with an **RC180 Controller**.
+2.  **JetBot AMR:** An autonomous mobile robot responsible for transporting parts to the robot's fixture using vision-based navigation.
 
 ## 📂 Repository Structure
 
-The project is organized into two main folders corresponding to the two hardware systems:
+The repository is divided into folders for each hardware component:
 
-### 1. 🏎️ `Jetbot/` (Autonomous Mobile Robot)
-Contains the Python-based control logic for the NVIDIA JetBot.
-* **`jetbot_main.ipynb`**: The primary control loop. Handles HSV-based Line Following (Yellow) and Dynamic Obstacle Avoidance (Red).
-* **`JetBot_config_color.ipynb`**: A GUI tool to calibrate color thresholds for different lighting conditions.
-* **`yellow_config.npy`** & **`red_config.npy`**: Configuration files storing the calibrated HSV values.
+### 1. `Epson/` (Robot Arm)
+* **`Robot_Production.zip`**: Source code for the physical robot (Compatible with **EPSON RC+ 5.0**).
+* **`Robot_Simulation.zip`**: Source code for the simulator (Compatible with **EPSON RC+ 7.0**).
+* **`Robot_Workflow.vsdx`**: Original Visio file for logic modification.
+* **`alignment_fixture.stl`**: 3D design file for the custom alignment fixture.
 
-### 2. 🤖 `Epson/` (Industrial Manipulator)
-Contains the SPEL+ code and mechanical designs for the Epson C3 Arm.
-* **`Robot_Production.zip`**: Controller source code (compatible with **EPSON RC+ 5.0**).
-* **`Robot_Simulation.zip`**: Simulation source code (compatible with **EPSON RC+ 7.0**).
-* **`Robot_Workflow.vsdx`**: Logic flowchart.
-* **`alignment_fixture.stl`**: 3D printable file for the custom alignment fixture designed to hold parts delivered by the JetBot.
+### 2. `Jetbot/` (Mobile Robot)
+* **`jetbot_main.ipynb`**: Main control script (Line Following & Obstacle Avoidance).
+* **`JetBot_config_color.ipynb`**: Color calibration tool for camera setup.
+* **`yellow_config.npy`** & **`red_config.npy`**: Configuration files for color thresholds.
 
-### 3. 🖼️ `images/`
-* **`align_design.jpg`**: Real-world photo of the machined alignment fixture.
-* **`Wiring_Diagram.png`**, **`Simulation_Demo.gif`**, and other project visuals.
+### 3. `images/`
+* Contains project photos, diagrams, and simulation recordings.
 
 ---
 
-## 🚀 Key Features
+## ⚙️ Hardware & Software Requirements
 
-### Part I: JetBot AMR (Logistics)
-The mobile robot uses a camera-based vision system to navigate the factory floor:
-* **Vision-Based Navigation:** Follows a yellow path using PID control on HSV-filtered images.
-* **Smart Obstacle Avoidance:** Detects red obstacles. Upon detection, it executes a blind-run maneuver to bypass the object and uses a "Far Detection" algorithm to search for the line and merge back into the lane.
-* **Fast Calibration:** Includes a Jupyter Notebook tool for quick color threshold adjustments.
+### Software Environments
+* **Robot Simulation:** EPSON RC+ 7.0 (For advanced 3D visualization).
+* **Robot Production:** EPSON RC+ 5.0 (Required for the physical RC180 controller).
+* **JetBot:** Jupyter Lab (Python 3).
 
-### Part II: Epson Robot (Assembly)
-The industrial arm handles the manipulation of objects delivered by the AMR:
-* **Smart Auto-Calibration (2-Point):** Uses custom algorithms (`UpdateTrayLocal`, `UpdateFixtureLocal`) to teach work planes using only 2 points (Origin + Y-Axis), automatically correcting for orientation flip.
-* **Motion Optimization:** Utilizes Continuous Path (`CP`) blending and parallel processing (vacuum activation during motion) for minimum cycle time.
+### Hardware Setup
+* **Robot:** Epson C3-A600S (6-Axis Vertical Articulated).
+* **Controller:** Epson RC180.
+* **Mobile:** NVIDIA JetBot (Waveshare/SparkFun).
+* **Peripherals:** Remote I/O Control Box, Vacuum Suction, Custom Alignment Fixture.
 
 ---
 
-## ⚙️ Hardware & Software
+## 🛠️ Mechanical Design: Alignment Fixture
 
-| System | Hardware | Software / Language |
-| :--- | :--- | :--- |
-| **Mobile Robot** | NVIDIA JetBot (Waveshare/SparkFun) | Python 3.6+, Jupyter Lab |
-| **Industrial Arm** | Epson C3-A600S (6-Axis) + RC180 Controller | EPSON RC+ 5.0 (SPEL+) |
-| **Simulation** | PC | EPSON RC+ 7.0 |
-
-### Mechanical Design: Alignment Fixture
-A custom fixture was designed and machined to bridge the two systems, ensuring the JetBot delivers parts to a precise location for the arm to pick up.
+A custom fixture was designed to align parts delivered by the JetBot for the Epson robot to pick up accurately.
 
 <p align="center">
   <img src="images/align_design.jpg" width="600" alt="Machined Alignment Fixture">
@@ -78,25 +88,59 @@ A custom fixture was designed and machined to bridge the two systems, ensuring t
 
 ---
 
+## 🚀 Key Features
+
+### Part 1: Epson Robot (Assembly)
+* **Smart Auto-Calibration (2-Point Method):** Uses custom SPEL+ algorithms (`UpdateTrayLocal`, `UpdateFixtureLocal`) to teach work planes using only 2 points (Origin + Y-Axis), automatically correcting for orientation flip.
+* **Motion Optimization:** Extensive use of `Go ... CP` and `Move ... CP` for smooth blending. Parallel processing allows vacuum activation *during* movement.
+* **Operation Modes:** Includes Pick & Place Cycle and Vertical Stacking logic.
+
+### Part 2: JetBot AMR (Transport)
+* **Line Following:** Uses HSV color filtering (Yellow) to track the path.
+* **Obstacle Avoidance:** Detects red obstacles. Upon detection, the robot executes a "Blind Run" to bypass the object and uses a "Far Detection" check to find the line again.
+* **Easy Calibration:** Includes a GUI-based notebook to adjust color thresholds for different lighting environments.
+
+---
+
+## 📝 Robot Code Overview (SPEL+)
+
+* **Calibration Core (`Setup.prg`)**: Functions to recalculate Tray and Fixture positions with auto-correction.
+* **Operation Modules**:
+    * `Feeder.prg`: Picks items with calculated Z-offsets.
+    * `Fixture.prg`: Intermediate alignment station.
+    * `Tray.prg`: Palletizing logic.
+    * `Stacking.prg`: Vertical stacking logic.
+* **Task Management (`Main.prg`)**: Runs a background `Monitor` task for safety/IO alongside the main `Cycle`.
+
+---
+
 ## 📥 Installation & Usage
 
-### Setting up the JetBot
-1.  Connect to the JetBot via Wi-Fi and open Jupyter Lab.
-2.  Upload the contents of the `Jetbot/` folder.
-3.  Run `JetBot_config_color.ipynb` to calibrate the Yellow (Line) and Red (Obstacle) colors.
-4.  Execute `jetbot_main.ipynb` to start the autonomous operation.
+### A. Epson Robot
+1.  **Simulation:** Extract `Epson/Robot_Simulation.zip` and open in EPSON RC+ 7.0. Press **F5** to run.
+2.  **Physical:** Extract `Epson/Robot_Production.zip`, import to EPSON RC+ 5.0, configure I/O as per the diagram below, and calibrate using the 2-point method.
 
-### Setting up the Epson Robot
-1.  **For Simulation:** Unzip `Epson/Robot_Simulation.zip` and open project in EPSON RC+ 7.0.
-2.  **For Production:** Unzip `Epson/Robot_Production.zip`, import into EPSON RC+ 5.0, and upload to the RC180 controller.
-3.  **Wiring:** Refer to the wiring diagram below for I/O connections.
+### B. JetBot
+1.  Upload the contents of the `Jetbot/` folder to the robot.
+2.  Run `JetBot_config_color.ipynb` to calibrate Yellow/Red thresholds.
+3.  Run `jetbot_main.ipynb` to start the autonomous loop.
+
+### 🔌 Wiring Diagram (Epson)
+Connection diagram between the Remote I/O Box and the RC180 Controller terminals.
 
 <p align="center">
-  <details>
-    <summary><strong>🔌 Click to view Wiring Diagram</strong></summary>
+  <a href="images/Wiring_Diagram.png" target="_blank">
     <img src="images/Wiring_Diagram.png" width="800" alt="Wiring Diagram I/O to RC180">
-  </details>
+  </a>
 </p>
+
+---
+
+## 🛡️ Safety Notes
+
+* **Payload:** Ensure the `Weight` parameter in `Init.prg` matches the actual payload (1.5 kg).
+* **Speed:** Reduce Speed/Accel to < 10% during the first run.
+* **E-Stop:** Always keep the Emergency Stop button within reach.
 
 ---
 *This project was developed as part of the Autonomous Mobile Vehicles and Robots Introduction (Fall 2025) at National Taiwan University of Science and Technology.*
